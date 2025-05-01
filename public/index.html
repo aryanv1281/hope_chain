@@ -1,27 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Crowdfunding Home</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="navbar">
     <div class="logo">
-      <h2 style="color: yellow;">CrowdChain</h2>
+      <img src="hope_chain_logo-removebg-preview.png" alt="Hope Chain Logo" />
+      <h2 class="heading">Hope Chain</h2>
     </div>
     <div class="buttons">
       <ul>
-        <li><a href="create.html">Create Fundraiser</a></li>
-        <li><a href="donate.html">Donate</a></li>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#our-vision">Our Vision</a></li>
+        <li><a href="#why-us">Why Us?</a></li>
+        <li><a href="#about-us">About Us</a></li>
       </ul>
     </div>
   </div>
-  <div class="vision">
-    <img src="background.jpg" alt="">
-    <div class="vision-text">
-      <h2>Welcome to CrowdChain</h2>
-      <p>Decentralized fundraising powered by blockchain.</p>
+
+  <div class="title_screen section" id="home">
+    <div class="title_text animate fade-in">
+      <h2>Welcome to Hope Chain</h2>
+      <p>Where Hope meets BlockChain</p>
+      <div class="link">
+        <button onclick="location.href='donate.html'">Donate</button>
+        <button onclick="location.href='create.html'">Create Fundraiser</button>
+      </div>
     </div>
+  </div>
+
+  <div class="section" id="our-vision">
+    <h2 class="section-title animate slide-up">Our Vision</h2>
+    <p class="section-text animate fade-in">
+      At Hope Chain, we believe in harnessing the transparency, security, and decentralization of blockchain to create a better future for fundraisers.
+      Our vision is to ensure that every donation reaches its destination, every transaction is traceable, and every donor feels confident that their
+      contributions are making a real impact—free from middlemen, corruption, or hidden fees.
+    </p>
+  </div>
+
+  <div class="section" id="why-us">
+    <h2 class="section-title animate slide-up">Why Us?</h2>
+    <p class="section-text animate fade-in">
+      Traditional fundraising systems rely on centralized platforms and intermediaries, which can delay fund access, reduce transparency, and involve
+      significant administrative costs. Hope Chain leverages blockchain to solve these problems—providing a decentralized, efficient, and secure platform
+      where donations go directly to those in need. <br /><br />
+      <!-- Placeholder for optional video -->
+      <div class="video-placeholder animate fade-in">[Video Placeholder]</div>
+    </p>
+  </div>
+
+  <div class="section" id="about-us">
+    <h2 class="section-title animate slide-up">About Us</h2>
+    <p class="section-text animate fade-in">We’re a team of 5 driven individuals passionate about transparency, impact, and innovation.</p>
+    <div class="team-container animate fade-in">
+      <div class="team-member">
+        <img src="team1.jpg" alt="Team Member 1">
+        <h3>Member 1</h3>
+        <p>Blockchain Developer</p>
+      </div>
+      <div class="team-member">
+        <img src="team2.jpg" alt="Team Member 2">
+        <h3>Member 2</h3>
+        <p>UI/UX Designer</p>
+      </div>
+      <div class="team-member">
+        <img src="team3.jpg" alt="Team Member 3">
+        <h3>Member 3</h3>
+        <p>Smart Contract Engineer</p>
+      </div>
+      <div class="team-member">
+        <img src="team4.jpg" alt="Team Member 4">
+        <h3>Member 4</h3>
+        <p>Marketing Lead</p>
+      </div>
+      <div class="team-member">
+        <img src="team5.jpg" alt="Team Member 5">
+        <h3>Member 5</h3>
+        <p>Community Manager</p>
+      </div>
+    </div>
+    <div class="footer-note">© 2025 Hope Chain | All rights reserved.</div>
   </div>
 </body>
 </html>
