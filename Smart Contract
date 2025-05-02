@@ -1,0 +1,85 @@
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Fundraiser {
+    struct FundraiserData {
+        string name;
+        string description;
+        uint256 goal;
+        address payable owner;
+        uint256 amountRaised;
+        string fundraiserType; // "public" or "private"
+        string category;       // e.g., "flood", "cancer"
+        uint256 peopleAffected;
+    }
+
+    mapping(uint256 => FundraiserData) public fundraisers;
+    uint256 public fundraiserCount;
+
+    event FundraiserCreated(uint256 id, string name, address owner);
+    event DonationReceived(uint256 id, address donor, uint256 amount);
+
+    function createFundraiser(
+        string calldata _name,
+        string calldata _description,
+        string calldata _fundraiserType,
+        string calldata _category,
+        uint256 _peopleAffected
+    ) public {
+        uint256 estimatedGoal = estimateGoal(_category, _peopleAffected);
+
+        fundraisers[++fundraiserCount] = FundraiserData({
+            name: _name,
+            description: _description,
+            goal: estimatedGoal,
+            owner: payable(msg.sender),
+            amountRaised: 0,
+            fundraiserType: _fundraiserType,
+            category: _category,
+            peopleAffected: _peopleAffected
+        });
+
+        emit FundraiserCreated(fundraiserCount, _name, msg.sender);
+    }
+
+    function estimateGoal(string memory _category, uint256 _peopleAffected) internal pure returns (uint256) {
+        bytes32 cat = keccak256(bytes(_category));
+
+        if (cat == keccak256("flood") || cat == keccak256("drought") || cat == keccak256("earthquake")) {
+            return _peopleAffected * 0.01 ether;
+        } else if (cat == keccak256("cancer")) {
+            return _peopleAffected * 0.5 ether;
+        } else if (cat == keccak256("heartsurgery")) {
+            return _peopleAffected * 1 ether;
+        } else {
+            return _peopleAffected * 0.05 ether;
+        }
+    }
+
+    function donate(uint256 _id) public payable {
+        require(msg.value > 0, "Amount must be > 0");
+        FundraiserData storage f = fundraisers[_id];
+        f.amountRaised += msg.value;
+        f.owner.transfer(msg.value);
+        emit DonationReceived(_id, msg.sender, msg.value);
+    }
+
+    function getFundraiser(uint256 _id) public view returns (
+        string memory, string memory, uint256, address, uint256, string memory, string memory, uint256
+    ) {
+        FundraiserData storage f = fundraisers[_id];
+        return (
+            f.name, f.description, f.goal, f.owner, f.amountRaised,
+            f.fundraiserType, f.category, f.peopleAffected
+        );
+    }
+
+    function getAllFundraisers() public view returns (FundraiserData[] memory) {
+        FundraiserData[] memory all = new FundraiserData[](fundraiserCount);
+        for (uint i = 0; i < fundraiserCount; i++) {
+            all[i] = fundraisers[i + 1];
+        }
+        return all;
+    }
+}
