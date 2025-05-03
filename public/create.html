@@ -1,18 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Create Fundraiser</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+  <script defer src="create.js"></script>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial;
+      margin: 20px;
+    }
+    form {
+      max-width: 400px;
+      margin: auto;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <button class="btn" id="connectButton">Connect MetaMask</button>
   <h2>Create a Fundraiser</h2>
-  <input type="text" id="name" placeholder="Name" /><br>
-  <textarea id="description" placeholder="Description"></textarea><br>
-  <input type="number" id="goal" placeholder="Goal Amount in ETH" /><br>
-  <button class="btn" id="createButton">Create Fundraiser</button>
+  <form id="fundraiserForm">
+    <label for="type">Select Fundraiser Type:</label>
+    <select id="type" required>
+      <option value="">--Select--</option>
+      <option value="Public">Public</option>
+      <option value="Private">Private</option>
+    </select>
 
-  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-  <script src="create.js"></script>
+    <div id="categorySection" style="display:none;">
+      <label for="category">Select Category:</label>
+      <select id="category" required></select>
+    </div>
+
+    <div id="extraInputSection" style="display:none;">
+      <label id="extraLabel" for="extraInput"></label>
+      <input type="number" id="extraInput" min="1" required>
+    </div>
+
+    <label for="name">Fundraiser Name:</label>
+    <input type="text" id="name" required>
+
+    <label for="description">Description:</label>
+    <textarea id="description" rows="3" required></textarea>
+
+    <button type="submit">Create Fundraiser</button>
+  </form>
 </body>
 </html>

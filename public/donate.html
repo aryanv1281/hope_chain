@@ -12,8 +12,20 @@
 
   <p id="wallet-address">Not connected</p>
 
-  <div id="fundraisers">No fundraisers loaded yet.</div>
-
+  <div style="display: flex; justify-content: space-between; padding: 20px;">
+    <div style="width: 48%;">
+      <h2>Public Fundraisers</h2>
+      <div id="publicFundraisers"></div>
+    </div>
+    <div style="width: 2%; border-left: 2px solid gray;"></div>
+    <div style="width: 48%;">
+      <h2>Private Fundraisers</h2>
+      <div id="privateFundraisers"></div>
+      
+    </div>
+  </div>
+  
+  
 
   <script src="https://cdn.jsdelivr.net/npm/web3@1.8.2/dist/web3.min.js"></script>
   <script src="donate.js"></script>

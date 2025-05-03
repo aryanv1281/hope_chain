@@ -27,22 +27,22 @@ const web3 = new Web3(new Web3.providers.HttpProvider(process.env.INFURA_URL));
 
 const contract = new web3.eth.Contract(abi, contractAddress);
 
-// Example API endpoint for creating a fundraiser
 app.post("/create-fundraiser", async (req, res) => {
-  const { name, description, goal, creator } = req.body;
+  const { name, description, fundraiserType, category, peopleAffected, creator } = req.body;
 
   try {
-    const serialNumber = Math.floor(1000000000 + Math.random() * 9000000000); // 10-digit serial
-
-    const tx = await contract.methods.createFundraiser(
+    // Make sure to call the contract method with correct arguments
+    await contract.methods.createFundraiser(
       name,
       description,
-      web3.utils.toWei(goal, "ether"),
-      serialNumber
+      fundraiserType, // This is the correct parameter for type
+      category,
+      parseInt(peopleAffected) // Convert peopleAffected to an integer (uint256 in Solidity)
     ).send({ from: creator });
 
-    res.json({ message: "Fundraiser created", serialNumber });
+    res.json({ message: "Fundraiser created successfully" });
   } catch (err) {
+    console.error("Error creating fundraiser:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -62,26 +62,60 @@ app.post("/donate", async (req, res) => {
 });
 
 // Endpoint to fetch all fundraisers for the donation page
-app.get('/fundraisers', async (req, res) => {
+// Fetch fundraisers, ensuring the data format is correct for the frontend
+app.get("/fundraisers", async (req, res) => {
   try {
-    const fundraisers = await contract.methods.getAllFundraisers().call();
-    
-    // Map and convert BigInt values to string
-    const fundraiserList = fundraisers.map(f => ({
-      name: f.name,
-      description: f.description,
-      goal: f.goal.toString(),
-      owner: f.owner,
-      amountRaised: f.amountRaised.toString(),
-      serial: f.serial.toString(),
-    }));
+    const count = await contract.methods.fundraiserCount().call();
+    const fundraisers = [];
 
-    res.json(fundraiserList);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+    // Fetch fundraisers and metadata together
+    const metadataPath = path.join(__dirname, 'public', 'fundraiser-metadata.json');
+    let metadata = [];
+    if (fs.existsSync(metadataPath)) {
+      metadata = JSON.parse(fs.readFileSync(metadataPath));
+    }
+
+    for (let i = 1; i <= count; i++) {
+      const fundraiser = await contract.methods.fundraisers(i).call();
+      
+      // Find type of fundraiser based on serial
+      const fundraiserType = metadata.find(m => m.serial == i.toString())?.type || "Unknown";
+
+      fundraisers.push({
+        name: fundraiser.name,
+        description: fundraiser.description,
+        goal: web3.utils.fromWei(fundraiser.goal, 'ether'),
+        raised: web3.utils.fromWei(fundraiser.amountRaised, 'ether'),
+        owner: fundraiser.owner,
+        serial: i.toString(),
+        type: fundraiserType // Add type from metadata
+      });
+    }
+
+    res.json(fundraisers);  // Corrected line, inside the try block
+
+  } catch (err) {
+    console.error("Error fetching fundraisers:", err);
+    res.status(500).json({ error: "Failed to fetch fundraisers" });
   }
 });
 
+// New route to fetch fundraiser types using the serial numbers
+app.get("/fundraiser-types", (req, res) => {
+  const metadataPath = path.join(__dirname, 'public', 'fundraiser-metadata.json');
+  
+  try {
+    if (fs.existsSync(metadataPath)) {
+      const metadata = JSON.parse(fs.readFileSync(metadataPath));
+      res.json(metadata); // [{ serial: 1000000001, type: "Public" }, ...]
+    } else {
+      res.json([]); // No metadata found
+    }
+  } catch (err) {
+    console.error("Error reading fundraiser metadata:", err);
+    res.status(500).json({ error: "Failed to read fundraiser types" });
+  }
+});
 
 
   

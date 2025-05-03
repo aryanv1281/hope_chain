@@ -12,8 +12,18 @@
 				"type": "string"
 			},
 			{
+				"internalType": "string",
+				"name": "_fundraiserType",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_category",
+				"type": "string"
+			},
+			{
 				"internalType": "uint256",
-				"name": "_goal",
+				"name": "_peopleAffected",
 				"type": "uint256"
 			}
 		],
@@ -26,7 +36,7 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_serial",
+				"name": "_id",
 				"type": "uint256"
 			}
 		],
@@ -41,7 +51,7 @@
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "serial",
+				"name": "id",
 				"type": "uint256"
 			},
 			{
@@ -66,7 +76,7 @@
 			{
 				"indexed": false,
 				"internalType": "uint256",
-				"name": "serial",
+				"name": "id",
 				"type": "uint256"
 			},
 			{
@@ -134,8 +144,18 @@
 				"type": "uint256"
 			},
 			{
+				"internalType": "string",
+				"name": "fundraiserType",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "category",
+				"type": "string"
+			},
+			{
 				"internalType": "uint256",
-				"name": "serial",
+				"name": "peopleAffected",
 				"type": "uint256"
 			}
 		],
@@ -174,8 +194,18 @@
 						"type": "uint256"
 					},
 					{
+						"internalType": "string",
+						"name": "fundraiserType",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "category",
+						"type": "string"
+					},
+					{
 						"internalType": "uint256",
-						"name": "serial",
+						"name": "peopleAffected",
 						"type": "uint256"
 					}
 				],
@@ -191,7 +221,7 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_serial",
+				"name": "_id",
 				"type": "uint256"
 			}
 		],
@@ -221,6 +251,16 @@
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			},
 			{
 				"internalType": "uint256",
