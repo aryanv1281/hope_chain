@@ -5,8 +5,12 @@ import Web3 from "web3";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import authRoutes from './routes/auth.js'; // ✅ Correct path for import
 
 dotenv.config();
+
 const contractAddress = process.env.CONTRACT_ADDRESS;
 const privateKey = process.env.PRIVATE_KEY;
 const infuraUrl = process.env.INFURA_URL;
@@ -16,22 +20,25 @@ const __dirname = path.dirname(__filename);
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
 
 // Serve static files from /public
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ✅ Correct route registration
+app.use('/auth', authRoutes); // Not './routes/auth'
+
 // Load ABI and contract address
 const abi = JSON.parse(fs.readFileSync("./FundraiserABI.json", "utf-8"));
-
-const web3 = new Web3(new Web3.providers.HttpProvider(process.env.INFURA_URL));
-
+const web3 = new Web3(new Web3.providers.HttpProvider(infuraUrl));
 const contract = new web3.eth.Contract(abi, contractAddress);
 
+// ✅ Fundraiser creation
 app.post("/create-fundraiser", async (req, res) => {
   const { name, description, fundraiserType, category, peopleAffected, creator } = req.body;
 
   try {
-    // Make sure to call the contract method with correct arguments
+    const serialNumber = Math.floor(1000000000 + Math.random() * 9000000000);
     await contract.methods.createFundraiser(
       name,
       description,
@@ -47,12 +54,12 @@ app.post("/create-fundraiser", async (req, res) => {
   }
 });
 
-// Example API endpoint for donation
+// ✅ Donation endpoint
 app.post("/donate", async (req, res) => {
   const { serialNumber, amount, donor } = req.body;
 
   try {
-    const tx = await contract.methods.donateToFundraiser(serialNumber)
+    await contract.methods.donateToFundraiser(serialNumber)
       .send({ from: donor, value: web3.utils.toWei(amount, "ether") });
 
     res.json({ message: "Donation successful" });
@@ -61,9 +68,8 @@ app.post("/donate", async (req, res) => {
   }
 });
 
-// Endpoint to fetch all fundraisers for the donation page
-// Fetch fundraisers, ensuring the data format is correct for the frontend
-app.get("/fundraisers", async (req, res) => {
+// ✅ Get all fundraisers
+app.get('/fundraisers', async (req, res) => {
   try {
     const count = await contract.methods.fundraiserCount().call();
     const fundraisers = [];
@@ -117,11 +123,12 @@ app.get("/fundraiser-types", (req, res) => {
   }
 });
 
+// ✅ MongoDB Connection
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('✅ Connected to MongoDB'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
-  
-
-const PORT = 5000
-;
+const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`✅ Server is running at http://localhost:${PORT}`);
 });
